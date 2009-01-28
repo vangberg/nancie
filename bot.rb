@@ -9,7 +9,7 @@ config do |c|
 end
 
 on :connect do
-  join "#awesome_channel"
+  join "#sinatra"
 end
 
 on :channel, /^nancie.*tweet this: (.*)/ do
