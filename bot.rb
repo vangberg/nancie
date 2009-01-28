@@ -4,6 +4,7 @@ require 'rest_client'
 require 'json'
 
 ALLOWED = %w(rtomayko blakemizerany cypher23 harryjr sr ...)
+
 config do |c|
   c.nick    = 'nancie'
   c.server  = 'irc.freenode.net'
