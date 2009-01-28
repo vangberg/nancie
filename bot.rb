@@ -53,7 +53,7 @@ on :channel, /^nancie.*tweet this: (.*)/ do
   if allowed?(nick)
     RestClient.post "http://sinatrarb:#{Nancie.config['twitter_password']}@twitter.com/statuses/update.json", :status => match[1]
   else
-    msg nick, "Boo! You are not allowed to do that. Flip the coin and ask for permission."
+    msg nick, "We're fucking ninjas! Move, bitch!"
   end
 end
 
