@@ -3,6 +3,7 @@ require 'isaac'
 require 'rest_client'
 require 'json'
 
+ALLOWED = %w(rtomayko blakemizerany cypher23 harryjr sr ...)
 config do |c|
   c.nick    = 'nancie'
   c.server  = 'irc.freenode.net'
@@ -13,5 +14,7 @@ on :connect do
 end
 
 on :channel, /^nancie.*tweet this: (.*)/ do
-  RestClient.post 'http://sinatrarb:somepassword@twitter.com/statuses/update.json', :status => match[1]
+  if ALLOWED.include?(nick)
+    RestClient.post 'http://sinatrarb:somepassword@twitter.com/statuses/update.json', :status => match[1]
+  end
 end
