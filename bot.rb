@@ -1,9 +1,11 @@
 # Meh, I went overboard. Usage:
 #
 # To tweet, write in channel:
-#   nancie: tweet this: some nice thing about sinatra and stuff
+#   nancie, tweet this: some nice thing about sinatra and stuff
 # To give permissions, private message:
 #   /msg nancie allow awesome_user
+#
+# Additional extensions are welcome.
 
 require 'rubygems'
 require 'isaac'
