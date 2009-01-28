@@ -60,6 +60,8 @@ end
 on :private, /^allow (\S+)/ do
   if allowed?(nick)
     Nancie.allow!(match[1])
-    msg nick, "#{match[1]} has throwing starts!"
+    msg nick, "#{match[1]} has throwing stars!"
+  else
+    msg nick, "Lulz, where are your throwing stars?"
   end
 end
