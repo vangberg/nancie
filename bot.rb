@@ -11,6 +11,7 @@ require 'rubygems'
 require 'isaac'
 require 'rest_client'
 require 'yaml'
+require 'json'
 
 module Nancie
   extend self
@@ -49,8 +50,11 @@ end
 
 on :channel, /^nancie.*tweet this: (.*)/ do
   if Nancie.allowed?(nick)
-    RestClient.post "http://sinatrajr:#{Nancie.config['twitter_password']}@" +
+    reply = RestClient.post "http://sinatrajr:#{Nancie.config['twitter_password']}@" +
       "twitter.com/statuses/update.json", :status => match[1]
+
+    reply = JSON.parse(reply)
+    msg channel, "#{nick}, http://twitter.com/sinatrarb/#{reply['id']}"
   else
     msg nick, "We're fucking ninjas! Move, bitch!"
   end
