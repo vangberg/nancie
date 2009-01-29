@@ -49,7 +49,7 @@ end
 
 on :channel, /^nancie.*tweet this: (.*)/ do
   if Nancie.allowed?(nick)
-    RestClient.post "http://sinatrarb:#{Nancie.config['twitter_password']}@" +
+    RestClient.post "http://sinatrajr:#{Nancie.config['twitter_password']}@" +
       "twitter.com/statuses/update.json", :status => match[1]
   else
     msg nick, "We're fucking ninjas! Move, bitch!"
@@ -57,11 +57,10 @@ on :channel, /^nancie.*tweet this: (.*)/ do
 end
 
 on :private, /^allow (\S+)/ do
-  nick = match.first
-
+  to_allow = match[1]
   if Nancie.allowed?(nick)
-    Nancie.allow!(nick)
-    msg nick, "#{nick} has throwing stars!"
+    Nancie.allow!(to_allow)
+    msg nick, "#{to_allow} has throwing stars!"
   else
     msg nick, "Lulz, where are your throwing stars?"
   end

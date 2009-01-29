@@ -1,6 +1,5 @@
 --- 
-twitter_password: something
-nickserv_password: otherthing
+twitter_password: f00b4r000
 allowed: 
 - rtomayko
 - sr
@@ -9,3 +8,5 @@ allowed:
 - cypher23
 - syd
 - harryjr
+- blakemizerany
+nickserv_password: bootsforwalking
