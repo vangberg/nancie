@@ -22,9 +22,7 @@ module Nancie
   end
 
   def write_config
-    File.open('config.yml', 'w') do |f|
-      YAML.dump(@config, f)
-    end
+    File.open('config.yml', 'w') { |f| YAML.dump(@config, f) }
   end
 
   def allowed?(nick)
@@ -44,11 +42,6 @@ config do |c|
   c.server  = 'irc.freenode.net'
 end
 
-helpers do
-  def allowed?(nick)
-  end
-end
-
 on :connect do
   join '#sinatra'
   msg 'nickserv', "identify #{Nancie.config['nickserv_password']}"
@@ -56,7 +49,8 @@ end
 
 on :channel, /^nancie.*tweet this: (.*)/ do
   if allowed?(nick)
-    RestClient.post "http://sinatrarb:#{Nancie.config['twitter_password']}@twitter.com/statuses/update.json", :status => match[1]
+    RestClient.post "http://sinatrarb:#{Nancie.config['twitter_password']}@" +
+      "twitter.com/statuses/update.json", :status => match[1]
   else
     msg nick, "We're fucking ninjas! Move, bitch!"
   end
