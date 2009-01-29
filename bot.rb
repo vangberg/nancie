@@ -48,7 +48,7 @@ on :connect do
 end
 
 on :channel, /^nancie.*tweet this: (.*)/ do
-  if allowed?(nick)
+  if Nancie.allowed?(nick)
     RestClient.post "http://sinatrarb:#{Nancie.config['twitter_password']}@" +
       "twitter.com/statuses/update.json", :status => match[1]
   else
@@ -57,7 +57,7 @@ on :channel, /^nancie.*tweet this: (.*)/ do
 end
 
 on :private, /^allow (\S+)/ do
-  nick = match.firt
+  nick = match.first
 
   if Nancie.allowed?(nick)
     Nancie.allow!(nick)
