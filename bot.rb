@@ -27,6 +27,10 @@ module Nancie
     end
   end
 
+  def allowed?(nick)
+    config['allowed'].include?(nick)
+  end
+
   def allow!(nick)
     @config['allowed'] << nick
     write_config
@@ -42,7 +46,6 @@ end
 
 helpers do
   def allowed?(nick)
-    Nancie.config['allowed'].include?(nick)
   end
 end
 
@@ -60,9 +63,11 @@ on :channel, /^nancie.*tweet this: (.*)/ do
 end
 
 on :private, /^allow (\S+)/ do
-  if allowed?(nick)
-    Nancie.allow!(match[1])
-    msg nick, "#{match[1]} has throwing stars!"
+  nick = match.firt
+
+  if Nancie.allowed?(nick)
+    Nancie.allow!(nick)
+    msg nick, "#{nick} has throwing stars!"
   else
     msg nick, "Lulz, where are your throwing stars?"
   end
