@@ -1,0 +1,15 @@
+## Available commands:
+
+In channel:
+    nancie, tweet this: some interesting stuff
+
+In private:
+    /msg nancie allow some_other_user
+
+## Configuration
+In config.yml:
+    twitter_password: some_password
+    nickserv_password: another
+    allowed:
+    - user1
+    - user2
