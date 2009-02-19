@@ -50,11 +50,11 @@ end
 
 on :channel, /^nancie.*tweet this: (.*)/ do
   if Nancie.allowed?(nick)
-    reply = RestClient.post "http://sinatrajr:#{Nancie.config['twitter_password']}@" +
+    reply = RestClient.post "http://sinatra:#{Nancie.config['twitter_password']}@" +
       "twitter.com/statuses/update.json", :status => match[1]
 
     reply = JSON.parse(reply)
-    msg channel, "#{nick}, http://twitter.com/sinatrarb/status/#{reply['id']}"
+    msg channel, "#{nick}, http://twitter.com/sinatra/status/#{reply['id']}"
   else
     msg nick, "We're fucking ninjas! Move, bitch!"
   end
