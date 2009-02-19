@@ -43,6 +43,12 @@ config do |c|
   c.server  = 'irc.freenode.net'
 end
 
+helpers do
+  def twitter(url, params={})
+    JSON.parse(RestClient.post "http://sinatra:#{Nancie.config['twitter_password']}@twitter.com/" + url + ".json", params)
+  end
+end
+
 on :connect do
   join '#sinatra'
   msg 'nickserv', "identify #{Nancie.config['nickserv_password']}"
@@ -50,13 +56,22 @@ end
 
 on :channel, /^nancie.*tweet this: (.*)/ do
   if Nancie.allowed?(nick)
-    reply = RestClient.post "http://sinatra:#{Nancie.config['twitter_password']}@" +
-      "twitter.com/statuses/update.json", :status => match[1]
-
-    reply = JSON.parse(reply)
+    reply = twitter "statuses/update", :status => match[1]
     msg channel, "#{nick}, http://twitter.com/sinatra/status/#{reply['id']}"
   else
     msg nick, "We're fucking ninjas! Move, bitch!"
+  end
+end
+
+on :channel, /^nancie.* follow (\S+)/ do
+  begin
+    if Nancie.allowed?(nick)
+      follow = match[1]
+      reply = twitter "friendships/create/#{follow}"
+      msg channel, "#{nick}, we're now following #{reply['screen_name']}."
+    end
+  rescue
+    msg channel, "#{nick}, something went wrong as I tried to follow #{follow}."
   end
 end
 
