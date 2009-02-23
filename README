@@ -22,3 +22,6 @@ In config.yml:
     allowed:
     - user1
     - user2
+
+## Extras
+Nancie requires isaac >= 0.2.1
