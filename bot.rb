@@ -8,7 +8,7 @@
 # Additional extensions are welcome.
 
 require 'rubygems'
-require 'isaac'
+require 'isaac' # requires 0.2 / shaft
 require 'rest_client'
 require 'yaml'
 require 'json'
@@ -34,53 +34,56 @@ module Nancie
     @config['allowed'] << nick
     write_config
   end
+
+  def twitter_credentials
+    "#{config['twitter']['login']}:#{config['twitter']['password']}"
+  end
 end
 
 Nancie.load_config
 
-config do |c|
-  c.nick    = 'nancie'
-  c.server  = 'irc.freenode.net'
+configure do |c|
+  c.nick    = Nancie.config['irc']['nick']
+  c.server  = Nancie.config['irc']['server']
+  c.port    = Nancie.config['irc']['port'] || 6667
 end
 
 helpers do
   def twitter(url, params={})
-    JSON.parse(RestClient.post "http://sinatra:#{Nancie.config['twitter_password']}@twitter.com/" + url + ".json", params)
+    JSON.parse(RestClient.post "http://#{Nancie.twitter_credentials}@twitter.com/" + url + ".json", params)
+  end
+
+  def ensure_permissions
+    halt unless Nancie.allowed?(nick)
   end
 end
 
 on :connect do
-  join '#sinatra'
-  msg 'nickserv', "identify #{Nancie.config['nickserv_password']}"
+  join "##{Nancie.config['irc']['channel']}"
+  msg 'nickserv', "identify #{Nancie.config['irc']['nickserv']}"
 end
 
-on :channel, /^nancie.*tweet this: (.*)/ do
-  if Nancie.allowed?(nick)
-    reply = twitter "statuses/update", :status => match[1]
-    msg channel, "#{nick}, http://twitter.com/sinatra/status/#{reply['id']}"
-  else
-    msg nick, "We're fucking ninjas! Move, bitch!"
-  end
+on :channel, /^#{Nancie.config['irc']['nick']}.*tweet this: (.*)/ do
+  ensure_permissions
+  reply = twitter "statuses/update", :status => match[0]
+  msg channel, "#{nick}, http://twitter.com/#{Nancie.config['twitter']['login']}/status/#{reply['id']}"
 end
 
-on :channel, /^nancie.* follow (\S+)/ do
+on :channel, /^#{Nancie.config['irc']['nick']}.* follow (\S+)/ do
+  ensure_permissions
   begin
-    if Nancie.allowed?(nick)
-      follow = match[1]
-      reply = twitter "friendships/create/#{follow}"
-      msg channel, "#{nick}, we're now following #{reply['screen_name']}."
-    end
+    follow = match[0]
+    reply = twitter "friendships/create/#{follow}"
+    msg channel, "#{nick}, we're now following #{reply['screen_name']}."
   rescue
     msg channel, "#{nick}, something went wrong as I tried to follow #{follow}."
   end
 end
 
 on :private, /^allow (\S+)/ do
-  to_allow = match[1]
-  if Nancie.allowed?(nick)
-    Nancie.allow!(to_allow)
-    msg nick, "#{to_allow} has throwing stars!"
-  else
-    msg nick, "Lulz, where are your throwing stars?"
-  end
+  ensure_permissions
+
+  allow = match[0]
+  Nancie.allow!(allow)
+  msg nick, "#{allow} has throwing stars!"
 end

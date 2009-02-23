@@ -9,8 +9,16 @@ In private:
 
 ## Configuration
 In config.yml:
-    twitter_password: some_password
-    nickserv_password: another
+
+    twitter:
+      login: awesome
+      password: something
+    irc:
+      nick: awesome_not
+      nickserv: nickserv_password
+      channel: awesome_channel
+      server: irc.freenode.net
+      port: 6667
     allowed:
     - user1
     - user2
