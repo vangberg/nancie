@@ -89,13 +89,17 @@ end
 on :channel, /^#{Nancie.config['irc']['nick']}.* tag (\d+) as (.*)/ do
   ensure_permissions
   begin
-    RestClient.post "http://sinatra-cheat.heroku.com/",
-      :gist => match[0],
-      :tags => match[1]
-    tags = match[1].tr(" ", "/")
-    msg channel, "#{nick}, http://sinatra-cheat.heroku.com/#{tags}"
+    url = Nancie.config['cheat']['url']
+    RestClient.post url,
+      :gist => "http://gist.github.com/" + match[0],
+      :tags => match[1].strip,
+      :token => Nancie.config['cheat']['token']
+  # Ok, this is really, really stupid, but the POST is being redirected to
+  # GET /tag1/tag2/.., but RestClient tries to do a POST and then it fails,
+  # and we rescue and act like it's totally normal. Awesome!
   rescue
-    msg channel, "#{nick}, something went wrong.."
+    tags = match[1].tr(" ", "/")
+    msg channel, "#{nick}, #{File.join(url, tags)}"
   end
 end
 

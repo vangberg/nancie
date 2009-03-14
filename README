@@ -21,6 +21,8 @@ In config.yml:
       channel: awesome_channel
       server: irc.freenode.net
       port: 6667
+    cheat:
+      token: ...
     allowed:
     - user1
     - user2
