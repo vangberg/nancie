@@ -81,13 +81,11 @@ on :channel, /^#{Nancie.config['irc']['nick']}.* follow (\S+)/ do
 end
 
 on :channel, /^#{Nancie.config['irc']['nick']}.* show (\S+) (.*)/ do
-  ensure_permissions
   tags = match[1].tr(" ", "/")
   msg channel, "#{match[0]}, take a look at http://sinatra-cheat.heroku.com/#{tags}"
 end
 
 on :channel, /^#{Nancie.config['irc']['nick']}.* tag (\d+) as (.*)/ do
-  ensure_permissions
   begin
     url = Nancie.config['cheat']['url']
     RestClient.post url,
