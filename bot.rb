@@ -80,6 +80,25 @@ on :channel, /^#{Nancie.config['irc']['nick']}.* follow (\S+)/ do
   end
 end
 
+on :channel, /^#{Nancie.config['irc']['nick']}.* show (\S+) (.*)/ do
+  ensure_permissions
+  tags = match[1].tr(" ", "/")
+  msg channel, "#{match[0]}, take a look at http://sinatra-cheat.heroku.com/#{tags}"
+end
+
+on :channel, /^#{Nancie.config['irc']['nick']}.* tag (\d+) as (.*)/ do
+  ensure_permissions
+  begin
+    RestClient.post "http://sinatra-cheat.heroku.com/",
+      :gist => match[0],
+      :tags => match[1]
+    tags = match[1].tr(" ", "/")
+    msg channel, "#{nick}, http://sinatra-cheat.heroku.com/#{tags}"
+  rescue
+    msg channel, "#{nick}, something went wrong.."
+  end
+end
+
 on :private, /^allow (\S+)/ do
   ensure_permissions
 

@@ -3,6 +3,8 @@
 In channel:
     nancie, tweet this: some interesting stuff
     nancie, follow frankieboy
+    nancie, tag 1234 as foo bar
+    nancie, show franky foo bar
 
 In private:
     /msg nancie allow some_other_user
