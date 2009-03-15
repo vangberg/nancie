@@ -81,8 +81,16 @@ on :channel, /^#{Nancie.config['irc']['nick']}.* follow (\S+)/ do
 end
 
 on :channel, /^#{Nancie.config['irc']['nick']}.* show (\S+) (.*)/ do
-  tags = match[1].tr(" ", "/")
-  msg channel, "#{match[0]}, take a look at http://sinatra-cheat.heroku.com/#{tags}"
+  tags = match[1].tr(" ", "/").strip
+  host = Nancie.config['cheat']['url']
+  url = File.join(host, tags)
+
+  result = RestClient.get url
+  if result =~ /no results/
+    msg channel, "there were no results for #{match[1]}"
+  else
+    msg channel, "#{match[0]}, take a look at #{url}"
+  end
 end
 
 on :channel, /^#{Nancie.config['irc']['nick']}.* tag (\d+) as (.*)/ do
