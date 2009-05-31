@@ -116,3 +116,7 @@ on :private, /^allow (\S+)/ do
   Nancie.allow!(allow)
   msg nick, "#{allow} has throwing stars!"
 end
+
+on :channel, /^#{Nancie.config['irc']['nick']}.* what is the answer to life, the universe, and everything/ do
+  msg channel, "#{nick}, 42"
+end
