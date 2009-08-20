@@ -65,8 +65,12 @@ end
 
 on :channel, /^#{Nancie.config['irc']['nick']}.*tweet this.? (.*)/ do
   ensure_permissions
-  reply = twitter "statuses/update", :status => match[0]
-  msg channel, "#{nick}, http://twitter.com/#{Nancie.config['twitter']['login']}/status/#{reply['id']}"
+  begin
+    reply = twitter "statuses/update", :status => match[0]
+    msg channel, "#{nick}, http://twitter.com/#{Nancie.config['twitter']['login']}/status/#{reply['id']}"
+  rescue
+    msg channel, "#{nick}, something went wrong as I tried to tweet."
+  end
 end
 
 on :channel, /^#{Nancie.config['irc']['nick']}.* follow (\S+)/ do
