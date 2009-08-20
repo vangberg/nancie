@@ -63,7 +63,7 @@ on :connect do
   msg 'nickserv', "identify #{Nancie.config['irc']['nickserv']}"
 end
 
-on :channel, /^#{Nancie.config['irc']['nick']}.*tweet this: (.*)/ do
+on :channel, /^#{Nancie.config['irc']['nick']}.*tweet this.? (.*)/ do
   ensure_permissions
   reply = twitter "statuses/update", :status => match[0]
   msg channel, "#{nick}, http://twitter.com/#{Nancie.config['twitter']['login']}/status/#{reply['id']}"
