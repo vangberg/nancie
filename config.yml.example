@@ -1,0 +1,12 @@
+--- 
+irc: 
+  nick: somebot
+  server: irc.freenode.net
+  channel: myawesomechan
+  nickserv: passwd_for_nickserv
+allowed: 
+- foo
+- bar
+twitter: 
+  login: mytwitter
+  password: xxxxxxxx

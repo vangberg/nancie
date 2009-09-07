@@ -84,35 +84,6 @@ on :channel, /^#{Nancie.config['irc']['nick']}.* follow (\S+)/ do
   end
 end
 
-on :channel, /^#{Nancie.config['irc']['nick']}.* show (\S+) (.*)/ do
-  tags = match[1].tr(" ", "/").strip
-  host = Nancie.config['cheat']['url']
-  url = File.join(host, tags)
-
-  result = RestClient.get url
-  if result =~ /no results/
-    msg channel, "there were no results for #{match[1]}"
-  else
-    msg channel, "#{match[0]}, take a look at #{url}"
-  end
-end
-
-on :channel, /^#{Nancie.config['irc']['nick']}.* tag (\d+) as (.*)/ do
-  begin
-    url = Nancie.config['cheat']['url']
-    RestClient.post url,
-      :gist => "http://gist.github.com/" + match[0],
-      :tags => match[1].strip,
-      :token => Nancie.config['cheat']['token']
-  # Ok, this is really, really stupid, but the POST is being redirected to
-  # GET /tag1/tag2/.., but RestClient tries to do a POST and then it fails,
-  # and we rescue and act like it's totally normal. Awesome!
-  rescue
-    tags = match[1].tr(" ", "/")
-    msg channel, "#{nick}, #{File.join(url, tags)}"
-  end
-end
-
 on :private, /^allow (\S+)/ do
   ensure_permissions
 
